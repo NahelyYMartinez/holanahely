@@ -1,4 +1,11 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/page/galery.dart';
+import 'package:my_app/page/description.dart';
+import 'package:my_app/page/person.dart';
+import 'package:custom_signin_buttons/custom_signin_buttons.dart';
+// ignore: unused_import
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,17 +18,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Mi app',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        accentColor: Colors.purple,
-        textTheme: TextTheme(
-          bodyText2: TextStyle(fontSize: 30, color: Colors.cyan),
-          headline4: TextStyle(fontWeight: FontWeight.w900, color: Colors.cyan),
-        ),
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Mi primera app'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -36,44 +38,59 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final items = const [
+    Icon(
+      Icons.person,
+      size: 30,
+    ),
+    Icon(
+      Icons.perm_media,
+      size: 30,
+    ),
+    Icon(
+      Icons.description,
+      size: 30,
+    ),
+  ];
+  int index = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 205, 160, 204),
-      appBar: AppBar(
-        title: Text(widget.title),
+      bottomNavigationBar: CurvedNavigationBar(
+        items: items,
+        index: index,
+        onTap: (selctedIndex) {
+          setState(() {
+            index = selctedIndex;
+          });
+        },
+        height: 70,
+        backgroundColor: Colors.transparent,
+        color: Colors.deepPurple,
+        animationDuration: const Duration(milliseconds: 300),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-                height: 150.0,
-                width: 150.0,
-                child: Image.asset('assets/foto.jpg')),
-            const Text(
-              'HOLA MUNDO',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: Container(
+        alignment: Alignment.center,
+        child: getSelectedWidget(index: index),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget getSelectedWidget({required int index}) {
+    // ignore: unused_local_variable, prefer_const_constructors
+    Widget widget = Person();
+    switch (index) {
+      case 0:
+        widget = const Person();
+        break;
+      case 1:
+        widget = const Galery();
+        break;
+      case 2:
+        widget = const Description();
+        break;
+    }
+    return widget;
   }
 }
